@@ -32,8 +32,8 @@ describe('parseArgs', () => {
 
 describe('pluginRoot', () => {
   test('windows and posix module urls', () => {
-    assert.equal(pluginRoot('file:///C:/Users/User/Work/tmstack/speak-mod/hooks/register.tsx'), 'C:/Users/User/Work/tmstack/speak-mod')
-    assert.equal(pluginRoot('file:///home/user/projects/tmstack/speak-mod/hooks/register.tsx'), '/home/user/projects/tmstack/speak-mod')
+    assert.equal(pluginRoot('file:///C:/Users/User/Work/speak-mod/hooks/register.tsx'), 'C:/Users/User/Work/speak-mod')
+    assert.equal(pluginRoot('file:///home/user/projects/speak-mod/hooks/register.tsx'), '/home/user/projects/speak-mod')
     assert.equal(pluginRoot('file:///C:/Users/User/My%20Plugins/speak-mod/hooks/register.tsx'), 'C:/Users/User/My Plugins/speak-mod')
   })
 })

@@ -56,7 +56,7 @@ shelled out around it. Codex has no function hooks and no voice mode.
 | `player/remote.sh` | Drives the SSH client's own player in stdio mode and mirrors its state, so a box without speakers plays through the machine you sit at. |
 | `player/authorize-client.ps1` | One-time, elevated: authorizes a box's SSH key on this Windows machine so it can play here. |
 | `tests/*.spec.ts` | Pure-logic tests: `npm test` (Node 22.18 or newer strips the types itself). |
-| `tests/engine/` | Hook tests against the engine: `claude plugin test speak-mod` (Claude Code 2.1.295 or newer): what voice mode reads, `/speak ask`, and the band on both surfaces. |
+| `tests/engine/` | Hook tests against the engine: `claude plugin test .` (Claude Code 2.1.295 or newer): what voice mode reads, `/speak ask`, and the band on both surfaces. |
 
 ## How it works
 
@@ -74,12 +74,14 @@ environment variable, never on disk.
 
 1. Function hooks on: `"CLAUDE_CODE_ENABLE_FUNCTION_HOOKS": "1"` under `env`
    in `~/.claude/settings.json`.
-2. The tmstack checkout is a directory marketplace named `tmstack`
-   (`.claude-plugin/marketplace.json` at the repo root):
+2. This repo is its own marketplace, named `speak-mod`
+   (`.claude-plugin/marketplace.json` beside the plugin manifest). Add it
+   from GitHub, or from a local checkout so the plugin runs in place and
+   `git pull` updates it:
 
    ```sh
-   claude plugin marketplace add /path/to/tmstack
-   claude plugin install speak@tmstack
+   claude plugin marketplace add truemar14/speak-mod   # or /path/to/speak-mod
+   claude plugin install speak@speak-mod
    ```
 
    Then set the engine's key under `/config` (rows "speak: Fish Audio API
@@ -91,11 +93,11 @@ environment variable, never on disk.
 3. Linux only: `curl`, `python3`, `mpv` and util-linux (`flock`, `setsid`)
    on the PATH.
 
-Develop with `claude --plugin-dir speak-mod` (`--debug` names what the engine
-refused); `claude plugin validate speak-mod` shows what the module hooks and
-calls; `npx -p typescript tsc -p speak-mod/tsconfig.json` typechecks against
-the declarations Claude Code writes into `speak-mod/.claude-plugin/types` each
-time a session loads the mod. Load it once after a Claude Code update.
+Develop from the checkout with `claude --plugin-dir .` (`--debug` names what
+the engine refused); `claude plugin validate .` shows what the module hooks
+and calls; `npx -p typescript tsc -p tsconfig.json` typechecks against the
+declarations Claude Code writes into `.claude-plugin/types` each time a
+session loads the mod. `npm test` runs the pure-logic tests. Load it once after a Claude Code update.
 
 ## Playing on the machine you connected from
 
